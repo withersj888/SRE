@@ -6,3 +6,4 @@ List your assumptions made about the pipeline and/or Azure DevOps set up
 2. The Engineer that runs it for the first time has permissions to approve use of the environments.
 3. An each loop is preferred.
 4. Can't deploy to selected environments (would use pipeline level params), albeit still in order.  
+5. CI (trigger) would be enabled against a repo which contains the code to be built and then deployed.
