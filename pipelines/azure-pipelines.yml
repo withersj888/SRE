@@ -1,6 +1,5 @@
 pr: none
-trigger:
-- main
+trigger: none
 
 pool:
   name: Azure Pipelines
