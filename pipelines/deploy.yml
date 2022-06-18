@@ -1,0 +1,10 @@
+parameters:
+  echo: ["1","2","3","4","5"]
+
+steps:
+- script: cat hello.txt
+  displayName: "hello world"
+  workingDirectory: $(Pipeline.Workspace)/helloWorld
+- ${{each e in parameters.echo}}:
+  - script: echo ${{ e }}
+    displayName: echo ${{ e }}

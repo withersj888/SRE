@@ -1,0 +1,58 @@
+pool:
+  name: Azure Pipelines
+  vmImage: 'ubuntu-latest'
+
+stages :
+  - stage: build
+    displayName: Build
+    jobs:
+    - job: build
+      displayName: Build
+      continueOnError: false
+      steps:
+        - task: Bash@3
+          displayName: Create file
+          inputs:
+            targetType: 'inline'
+            script: |
+              mkdir assets
+              cd assets
+              echo "hello world" >> hello.txt
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish Artifact"
+          inputs:
+            pathToPublish: '$(Build.SourcesDirectory)/assets/hello.txt'
+            artifactName: helloWorld
+        - task: Bash@3
+          displayName: Successful
+          inputs:
+            targetType: 'inline'
+            script: echo "Test suite ran successfully"
+  - stage: Deploy
+    jobs:
+      - deployment: deployDev
+        displayName: "Deploy to Development"
+        environment: Development
+        strategy:
+          runOnce:
+            deploy:
+              steps: 
+                - template: deploy.yml
+      - deployment: deployStg
+        displayName: "Deploy to Staging"
+        environment: Staging
+        dependsOn: deployDev
+        strategy:
+          runOnce:
+            deploy:
+              steps: 
+                - template: deploy.yml
+      - deployment: deployPrd
+        displayName: "Deploy to Production"
+        environment: Production
+        dependsOn: deployStg
+        strategy:
+          runOnce:
+            deploy:
+              steps: 
+                - template: deploy.yml
